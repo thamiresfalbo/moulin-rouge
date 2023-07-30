@@ -1,7 +1,7 @@
-from attrs import define
+import attrs
 import constants
 
-@define
+@attrs.define
 class Tile:
     char: str
     walkable: bool
