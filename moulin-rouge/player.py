@@ -1,16 +1,15 @@
-import esper
 import tcod
 import constants
-import attrs
+from attrs import define as component
 
-@attrs.define(eq=False)
+@component
 class Player:
     x: int
     y: int
-    color: tuple = constants.COLORS['YELLOW']
+    _color: tuple = constants.YELLOW
 
     def on_draw(self, console: tcod.console.Console) -> None:
-        console.print(self.x, self.y, '@', self.color)#or use a chr(0x263B) for a happy face
+        console.print(self.x, self.y, '@', self._color)#or use a chr(0x263B) for a happy face
 
     def on_event(self, event: tcod.event.Event) -> None:
         match event:
@@ -24,4 +23,3 @@ class Player:
                 self.y -= 1
             case tcod.event.KeyDown(sym=tcod.event.KeySym.DOWN):
                 self.y += 1
-
