@@ -16,14 +16,14 @@ def main() -> None:
     player = Player(constants.WIDTH//2,constants.HEIGHT//2)
 
     def create_world():
-        w = CellularAutomata(constants.WIDTH,constants.HEIGHT).make_caves().build()
-        for x in range(constants.WIDTH):
-            for y in range(constants.HEIGHT):
+        w = CellularAutomata(20,20).make_caves().build()
+        for x in range(20):
+            for y in range(20):
                 #TODO: Use console.tiles_rgb instead
-                if w[x][y] == 0:
-                    console.print(x,y,string=chr(0x2588),fg=constants.WHITE) # Wall
-                elif w[x][y] == 1:
-                    console.print(x,y,string=chr(0x20),fg=constants.WHITE) # Floor
+                if w[x,y]:
+                    console.print(x,y,string=chr(0x2588),fg=constants.BLUE) # Wall
+                else:
+                    console.print(x,y,string=chr(0x20),fg=constants.BLUE) # Floor
 
     #TODO: Make it not generate a new map when inside context loop.
     create_world()
@@ -35,12 +35,13 @@ def main() -> None:
                           ) as context:
         while True:
             # console.clear()
-
+            create_world()
             context.present(console)
             for event in tcod.event.wait():
                 print(event)
                 if isinstance(event,tcod.event.Quit):
                     raise SystemExit()
+
 
 if __name__ == "__main__":
     main()
