@@ -7,7 +7,7 @@ from world.cellularautomata import CellularAutomata
 # TODO: Add sdl window so that it can use layers.
 def main() -> None:
     TILESET = tcod.tileset.load_tilesheet(
-        "./assets/taffer8x8.png",
+        "./assets/tileset.png",
         columns=16,
         rows=16,
         charmap=tcod.tileset.CHARMAP_CP437,
@@ -26,13 +26,13 @@ def main() -> None:
                 # TODO: Use console.tiles_rgb instead
                 if w.tiles[x, y]:
                     # Floor
-                    console.print(x, y, string=".", fg=constants.PURPLE)
+                    console.print(x, y, string=chr(0x20), fg=constants.PURPLE)
                 else:
                     # Wall
-                    console.print(x, y, string="#", fg=constants.PURPLE)
+                    console.print(x, y, string=chr(0x2588), fg=constants.PURPLE)
 
     # TODO: Make it not generate a new map when inside context loop.
-
+    create_world()
     with tcod.context.new(
         columns=constants.WIDTH,
         rows=constants.HEIGHT,
@@ -41,7 +41,6 @@ def main() -> None:
     ) as context:
         while True:
             # console.clear()
-            create_world()
             context.present(console)
             for event in tcod.event.wait():
                 print(event)
