@@ -19,19 +19,17 @@ def main() -> None:
     player = Player(constants.WIDTH // 2, constants.HEIGHT // 2)
 
     def create_world():
-        w = CellularAutomata(constants.WIDTH, constants.HEIGHT)
+        w = CellularAutomata(height=constants.HEIGHT, width=constants.WIDTH)
         w.make_caves()
-        for x in range(constants.WIDTH):
-            for y in range(constants.HEIGHT):
+        # w.print_caves()
+        for y in range(constants.HEIGHT):
+            for x in range(constants.WIDTH):
                 # TODO: Use console.tiles_rgb instead
-                if w.tiles[x, y]:
-                    # Floor
-                    console.print(x, y, string=chr(0x20), fg=constants.PURPLE)
+                if w.tiles[y, x]:
+                    console.print(x, y, string="#", fg=constants.WHITE)
                 else:
-                    # Wall
-                    console.print(x, y, string=chr(0x2588), fg=constants.PURPLE)
+                    console.print(x, y, string=" ", fg=constants.WHITE)
 
-    # TODO: Make it not generate a new map when inside context loop.
     create_world()
     with tcod.context.new(
         columns=constants.WIDTH,
@@ -40,12 +38,16 @@ def main() -> None:
         title="Moulin Rouge",
     ) as context:
         while True:
-            # console.clear()
             context.present(console)
             for event in tcod.event.wait():
                 print(event)
                 if isinstance(event, tcod.event.Quit):
                     raise SystemExit()
+                elif isinstance(event, tcod.event.KeyDown):
+                    if event.sym == tcod.event.KeySym.SPACE:
+                        create_world()
+                elif isinstance(event, tcod.event.MouseMotion):
+                    continue
 
 
 if __name__ == "__main__":
