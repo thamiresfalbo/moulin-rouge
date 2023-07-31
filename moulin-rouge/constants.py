@@ -1,5 +1,5 @@
 # Default sizes for console
-WIDTH = 50
+WIDTH = 80
 HEIGHT = 50
 
 # Palette by Dawnbringer:

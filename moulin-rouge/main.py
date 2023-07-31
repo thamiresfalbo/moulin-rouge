@@ -7,7 +7,7 @@ from world.cellularautomata import CellularAutomata
 # TODO: Add sdl window so that it can use layers.
 def main() -> None:
     TILESET = tcod.tileset.load_tilesheet(
-        "./assets/tileset.png",
+        "./assets/taffer8x8.png",
         columns=16,
         rows=16,
         charmap=tcod.tileset.CHARMAP_CP437,
@@ -19,16 +19,14 @@ def main() -> None:
     player = Player(constants.WIDTH // 2, constants.HEIGHT // 2)
 
     def create_world():
-        w = CellularAutomata(height=constants.HEIGHT, width=constants.WIDTH)
-        w.make_caves()
-        # w.print_caves()
+        w = CellularAutomata(height=constants.HEIGHT, width=constants.WIDTH).build()
         for y in range(constants.HEIGHT):
             for x in range(constants.WIDTH):
                 # TODO: Use console.tiles_rgb instead
-                if w.tiles[y, x]:
-                    console.print(x, y, string="#", fg=constants.WHITE)
+                if w[y, x]:
+                    console.print(x, y, string=chr(0x20), fg=constants.WHITE)
                 else:
-                    console.print(x, y, string=" ", fg=constants.WHITE)
+                    console.print(x, y, string=chr(0x2588), fg=constants.WHITE)
 
     create_world()
     with tcod.context.new(
