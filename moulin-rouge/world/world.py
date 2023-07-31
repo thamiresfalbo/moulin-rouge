@@ -12,6 +12,3 @@ class World():
         self.width = width
         self.height = height
         self.tiles: NDArray[np.bool_] = np.zeros(shape=[self.width,self.height],dtype=np.bool_,order='F')
-
-    def build(self):
-        return self.tiles

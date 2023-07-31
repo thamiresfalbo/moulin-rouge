@@ -17,6 +17,7 @@ virtualenv = "==20.24.1"
 virtualenv-clone = "==0.5.7"
 esper = "*"
 attrs = "*"
+scipy = "*"
 
 [dev-packages]
 
