@@ -2,14 +2,18 @@ import tcod
 import constants
 from attrs import define as component
 
+
 @component
 class Player:
     x: int
     y: int
-    _color: tuple = constants.YELLOW
+    _fg: tuple = constants.YELLOW
+    _bg: tuple = constants.BLACK
 
     def on_draw(self, console: tcod.console.Console) -> None:
-        console.print(self.x, self.y, '@', self._color)#or use a chr(0x263B) for a happy face
+        console.print(
+            self.x, self.y, "@", self._fg, self._bg
+        )  # or use a chr(0x263B) for a happy face
 
     def on_event(self, event: tcod.event.Event) -> None:
         match event:

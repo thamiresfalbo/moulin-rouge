@@ -42,6 +42,11 @@ class World:
             return True
         return False
 
+    def is_wall(self, x: int, y: int) -> bool:
+        if self._tiles[y, x] == 1:
+            return True
+        return False
+
 
 # CELLULAR AUTOMATA
 # I ended using the latter since looping was slow.
