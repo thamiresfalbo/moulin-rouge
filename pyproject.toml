@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "moulin-rouge"
+version = "0.1.0"
+description = ""
+authors = ["Thamires Falbo <111710331+thamiresfalbo@users.noreply.github.com>"]
+license = "BSD 3-Clause License"
+readme = "README.md"
+#packages = [{ include = "moulin_rouge" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+scipy = "^1.11.1"
+tcod = "^16.1.1"
+numpy = "^1.25.2"
+attrs = "^23.1.0"
+esper = "^2.5"
+
+[tool.taskipy.tasks]
+start = "cd moulin-rouge && python main.py"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
