@@ -4,7 +4,7 @@ import constants
 from world.cellularautomata import CellularAutomata
 
 
-# TODO: Add sdl window so that it can use layers.
+# TODO Add sdl window for layers.
 def main() -> None:
     TILESET = tcod.tileset.load_tilesheet(
         "./assets/taffer8x8.png",
@@ -22,7 +22,7 @@ def main() -> None:
         w = CellularAutomata(height=constants.HEIGHT, width=constants.WIDTH).build()
         for y in range(constants.HEIGHT):
             for x in range(constants.WIDTH):
-                # TODO: Use console.tiles_rgb instead
+                # TODO Use console.tiles_rgb instead
                 if w[y, x]:
                     console.print(x, y, string=chr(0x20), fg=constants.WHITE)
                 else:
@@ -35,6 +35,7 @@ def main() -> None:
         tileset=TILESET,
         title="Moulin Rouge",
     ) as context:
+        # TODO Add an director/engine
         while True:
             context.present(console)
             for event in tcod.event.wait():
