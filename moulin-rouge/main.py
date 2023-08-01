@@ -1,7 +1,7 @@
 import tcod
 from player import Player
 import constants
-from world.cellularautomata import CellularAutomata
+from map.drunkardwalk import DrunkWalkWalk
 
 
 # TODO Add sdl window for layers.
@@ -19,14 +19,16 @@ def main() -> None:
     player = Player(constants.WIDTH // 2, constants.HEIGHT // 2)
 
     def create_world():
-        w = CellularAutomata(height=constants.HEIGHT, width=constants.WIDTH).build()
+        w = DrunkWalkWalk(height=constants.HEIGHT, width=constants.WIDTH).build()
         for y in range(constants.HEIGHT):
             for x in range(constants.WIDTH):
                 # TODO Use console.tiles_rgb instead
-                if w[y, x]:
-                    console.print(x, y, string=chr(0x20), fg=constants.WHITE)
-                else:
-                    console.print(x, y, string=chr(0x2588), fg=constants.WHITE)
+                if w[y, x] == 0:
+                    # Walls
+                    console.print(x, y, string=chr(0x2588), fg=constants.YELLOW)
+                elif w[y, x] == 1:
+                    # Floors
+                    console.print(x, y, string=chr(0x20), fg=constants.YELLOW)
 
     create_world()
     with tcod.context.new(
