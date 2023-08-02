@@ -28,9 +28,9 @@ class MMap:
         return self
 
     def print_caves(self):
-        for i in range(self.height):
-            for j in range(self.width):
-                if self._tiles[i, j] == 2:
+        for j in range(self.height):
+            for i in range(self.width):
+                if self._tiles[j, i] == 2:
                     print(" ", end="")
                 else:
                     print("#", end="")
@@ -85,7 +85,7 @@ class MCellularAutomata(MMap):
 
 
 # RANDOM WALK
-class RandomWalk(MMap):
+class MRandomWalk(MMap):
     """A map made by random dwarves."""
 
     def make_caves(self):

@@ -1,15 +1,14 @@
-from attrs import define, field
+from attrs import define as component
 import esper
 from tcod.console import Console
 import tcod.event
-import map_builder
 import numpy as np
 from numpy.typing import NDArray
 import constants
 
 
 # COMPONENTS
-@define
+@component
 class CRender:
     x: int
     y: int
@@ -18,14 +17,13 @@ class CRender:
     bg: tuple
 
 
-@define
+@component
 class CMovement:
     x: int = 0
     y: int = 0
 
 
-# TODO Finish CMap component
-@define
+@component
 class CMap:
     tiles: NDArray[np.uint8]
 
@@ -38,18 +36,18 @@ class PRender(esper.Processor):
             console.print(rend.x, rend.y, rend.char, rend.fg, rend.bg)
 
 
-# TODO Apply cartographer to PMapRender
+# TODO Fix PMapRender looping
 class PMapRender(esper.Processor):
     def process(self, console):
-        for ent, (rend, cmap) in self.world.get_components(CRender, CMap):
-            for y in cmap.tiles:
-                for x in cmap.tiles[y]:
+        for ent, cmap in self.world.get_component(CMap):
+            for y in range(cmap.tiles):
+                for x in range(cmap.tiles[y]):
                     if cmap.tiles[y, x] == 1:
                         console.print(x, y, " ", constants.WHITE, constants.BLACK)
                     else:
                         console.print(x, y, "#", constants.WHITE, constants.BLACK)
 
-    def is_walkable(self, x: int, y: int) -> None:
+    def is_walkable(self, x: int, y: int) -> bool:
         pass
 
 
