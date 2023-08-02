@@ -27,6 +27,7 @@ def main() -> None:
 
     # Processors
     world.add_processor(director.PRender())
+    world.add_processor(director.PMapRender(), priority=1)
     world.add_processor(director.PMovement())
 
     # Components

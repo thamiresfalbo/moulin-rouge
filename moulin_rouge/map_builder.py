@@ -1,19 +1,27 @@
 import numpy as np
 from numpy.typing import NDArray
 import scipy.signal
-import attrs
 from copy import copy
+from attrs import define, field
 
 
-@attrs.define
+@define
 class MMap:
+    """
+    Main template class for maps.
+    """
+
     width: int
     height: int
-    tiles: NDArray[np.uint8] = attrs.field(init=False)
-    _fill_percentage: float = attrs.field(init=False, default=0.45)
+    tiles: NDArray[np.uint8] = field(init=False)
+    _fill_percentage: float = field(init=False, default=0.45)
+    _center_x: int = field(init=False)
+    _center_y: int = field(init=False)
 
     def __attrs_post_init__(self):
         self.tiles: NDArray[np.uint8] = np.zeros((self.height, self.width))
+        self._center_x = int(len(self.tiles) / 2)
+        self._center_y = int(len(self.tiles[0]) / 2)
 
     def add_borders(self):
         self.tiles[[0, -1], :] = 0
@@ -59,13 +67,13 @@ class MCellularAutomata(MMap):
         self.tiles: NDArray[np.uint8] = (
             np.random.random((self.height, self.width)) > self._fill_percentage
         )
+        self._center_x = int(len(self.tiles) / 2)
+        self._center_y = int(len(self.tiles[0]) / 2)
 
     def __middle_corridors(self):
-        mid_y = int(self.height / 2)
-        mid_x = int(self.width / 2)
         factor = 2
-        self.tiles[mid_y - factor : mid_y, :] = 1
-        self.tiles[:, mid_x - factor : mid_x] = 1
+        self.tiles[self._center_y - factor : self._center_y, :] = 1
+        self.tiles[:, self._center_x - factor : self._center_x] = 1
 
     def make_caves(self):
         self.__middle_corridors()
@@ -93,27 +101,27 @@ class MRandomWalk(MMap):
         total_tiles = 0
         steps = 400
 
-        center = [int(self.tiles / 2), int(self.tiles[0] / 2)]
-        self.tiles[center[0], center[1]] = 1
-        drunk_y = copy(center[0])
-        drunk_x = copy(center[1])
+        self.tiles[self._center_y, self._center_x] = 1
+        drunk_y = copy(self._center_y)
+        drunk_x = copy(self._center_x)
         while total_tiles < goal:
             total_tiles = np.count_nonzero(self.tiles)
 
             for _ in range(steps):
                 r = np.random.randint(5)
-                if r == 4:
-                    drunk_x += 1
-                elif r == 3:
-                    drunk_x -= 1
-                elif r == 2:
-                    drunk_y += 1
-                elif r == 1:
-                    drunk_y -= 1
+                match r:
+                    case 4:
+                        drunk_x += 1
+                    case 3:
+                        drunk_x -= 1
+                    case 2:
+                        drunk_y += 1
+                    case 1:
+                        drunk_y -= 1
 
                 if self.out_of_bounds(drunk_x, drunk_y):
-                    drunk_x = center[1]
-                    drunk_y = center[0]
+                    drunk_x = self._center_x
+                    drunk_y = self._center_y
                 self.tiles[drunk_y, drunk_x] = 1
 
         self.add_borders()
