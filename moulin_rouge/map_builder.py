@@ -1,13 +1,12 @@
 import numpy as np
 from numpy.typing import NDArray
-from numpy.typing import NDArray
 import scipy.signal
 import attrs
 from copy import copy
 
 
 @attrs.define
-class World:
+class MMap:
     width: int
     height: int
     _tiles: NDArray[np.uint8] = attrs.field(init=False)
@@ -53,7 +52,7 @@ class World:
 # http://trystans.blogspot.com/2011/08/roguelike-tutorial-03-scrolling-through.html
 # https://roguebasin.com/index.php/Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
 # https://github.com/libtcod/python-tcod/blob/main/examples/cavegen.py
-class CellularAutomata(World):
+class MCellularAutomata(MMap):
     """A natural cave-looking map."""
 
     def __attrs_post_init__(self):
@@ -86,7 +85,7 @@ class CellularAutomata(World):
 
 
 # RANDOM WALK
-class RandomWalk(World):
+class RandomWalk(MMap):
     """A map made by random dwarves."""
 
     def make_caves(self):
@@ -94,8 +93,7 @@ class RandomWalk(World):
         total_tiles = 0
         steps = 400
 
-        # TODO Check out of bounds
-        center = [int(self.height / 2), int(self.width / 2)]
+        center = [int(self._tiles / 2), int(self._tiles[0] / 2)]
         self._tiles[center[0], center[1]] = 1
         drunk_y = copy(center[0])
         drunk_x = copy(center[1])

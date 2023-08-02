@@ -2,6 +2,7 @@ from math import pow
 from attrs import define, field
 
 
+# TODO Make it into a Component
 @define
 class Experience:
     tnl: int = 100
