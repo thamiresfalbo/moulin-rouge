@@ -17,6 +17,8 @@ def main() -> None:
     root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT)
 
     my_map = MCellularAutomata(constants.WIDTH, constants.HEIGHT).make_caves().build()
+
+    # ECS
     world = esper.World()
 
     # Entities
@@ -25,7 +27,6 @@ def main() -> None:
 
     # Processors
     world.add_processor(director.PRender())
-    world.add_processor(director.PMapRender())
     world.add_processor(director.PMovement())
 
     # Components
@@ -54,6 +55,7 @@ def main() -> None:
     ) as context:
         while True:
             context.present(root_console)
+            root_console.clear()
             world.process(root_console)
 
 

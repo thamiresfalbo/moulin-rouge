@@ -9,19 +9,19 @@ from copy import copy
 class MMap:
     width: int
     height: int
-    _tiles: NDArray[np.uint8] = attrs.field(init=False)
+    tiles: NDArray[np.uint8] = attrs.field(init=False)
     _fill_percentage: float = attrs.field(init=False, default=0.45)
 
     def __attrs_post_init__(self):
-        self._tiles: NDArray[np.uint8] = np.zeros((self.height, self.width))
+        self.tiles: NDArray[np.uint8] = np.zeros((self.height, self.width))
 
     def add_borders(self):
-        self._tiles[[0, -1], :] = 0
-        self._tiles[:, [0, -1]] = 0
+        self.tiles[[0, -1], :] = 0
+        self.tiles[:, [0, -1]] = 0
 
     def build(self):
         """Returns the cave as an numpy array. Note that the arrays have inverted coordinates(y, x)"""
-        return self._tiles
+        return self.tiles
 
     def make_caves(self):
         """Default method for cave-making."""
@@ -30,7 +30,7 @@ class MMap:
     def print_caves(self):
         for j in range(self.height):
             for i in range(self.width):
-                if self._tiles[j, i] == 2:
+                if self.tiles[j, i] == 2:
                     print(" ", end="")
                 else:
                     print("#", end="")
@@ -42,7 +42,7 @@ class MMap:
         return False
 
     def is_wall(self, x: int, y: int) -> bool:
-        if self._tiles[y, x] == 1:
+        if self.tiles[y, x] == 1:
             return True
         return False
 
@@ -56,7 +56,7 @@ class MCellularAutomata(MMap):
     """A natural cave-looking map."""
 
     def __attrs_post_init__(self):
-        self._tiles: NDArray[np.uint8] = (
+        self.tiles: NDArray[np.uint8] = (
             np.random.random((self.height, self.width)) > self._fill_percentage
         )
 
@@ -64,13 +64,13 @@ class MCellularAutomata(MMap):
         mid_y = int(self.height / 2)
         mid_x = int(self.width / 2)
         factor = 2
-        self._tiles[mid_y - factor : mid_y, :] = 1
-        self._tiles[:, mid_x - factor : mid_x] = 1
+        self.tiles[mid_y - factor : mid_y, :] = 1
+        self.tiles[:, mid_x - factor : mid_x] = 1
 
     def make_caves(self):
         self.__middle_corridors()
         for _ in range(5):
-            self._tiles = self.convolve(self._tiles)
+            self.tiles = self.convolve(self.tiles)
             self.add_borders()
 
         return self
@@ -89,16 +89,16 @@ class MRandomWalk(MMap):
     """A map made by random dwarves."""
 
     def make_caves(self):
-        goal = int(self._tiles.size * self._fill_percentage)
+        goal = int(self.tiles.size * self._fill_percentage)
         total_tiles = 0
         steps = 400
 
-        center = [int(self._tiles / 2), int(self._tiles[0] / 2)]
-        self._tiles[center[0], center[1]] = 1
+        center = [int(self.tiles / 2), int(self.tiles[0] / 2)]
+        self.tiles[center[0], center[1]] = 1
         drunk_y = copy(center[0])
         drunk_x = copy(center[1])
         while total_tiles < goal:
-            total_tiles = np.count_nonzero(self._tiles)
+            total_tiles = np.count_nonzero(self.tiles)
 
             for _ in range(steps):
                 r = np.random.randint(5)
@@ -114,7 +114,7 @@ class MRandomWalk(MMap):
                 if self.out_of_bounds(drunk_x, drunk_y):
                     drunk_x = center[1]
                     drunk_y = center[0]
-                self._tiles[drunk_y, drunk_x] = 1
+                self.tiles[drunk_y, drunk_x] = 1
 
         self.add_borders()
         return self

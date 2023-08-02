@@ -5,6 +5,7 @@ import tcod.event
 import numpy as np
 from numpy.typing import NDArray
 import constants
+from typing import Any
 
 
 # COMPONENTS
@@ -30,22 +31,23 @@ class CMap:
 
 # PROCESSORS
 class PRender(esper.Processor):
-    def process(self, console):
-        console.clear()
-        for ent, rend in self.world.get_component(CRender):
-            console.print(rend.x, rend.y, rend.char, rend.fg, rend.bg)
+    """
+    The main render control.
+    """
 
-
-# TODO Fix PMapRender looping
-class PMapRender(esper.Processor):
     def process(self, console):
         for ent, cmap in self.world.get_component(CMap):
-            for y in range(cmap.tiles):
-                for x in range(cmap.tiles[y]):
-                    if cmap.tiles[y, x] == 1:
-                        console.print(x, y, " ", constants.WHITE, constants.BLACK)
+            for y in range(len(cmap.tiles)):
+                for x in range(len(cmap.tiles[0])):
+                    if cmap.tiles[y, x] == True:
+                        # console.print(x, y, chr(0x20), constants.WHITE, constants.BLACK)
+                        pass
                     else:
-                        console.print(x, y, "#", constants.WHITE, constants.BLACK)
+                        console.print(
+                            x, y, chr(0x2588), constants.WHITE, constants.BLACK
+                        )
+        for ent, rend in self.world.get_component(CRender):
+            console.print(rend.x, rend.y, rend.char, rend.fg, rend.bg)
 
     def is_walkable(self, x: int, y: int) -> bool:
         pass
