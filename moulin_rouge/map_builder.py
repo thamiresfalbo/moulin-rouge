@@ -55,20 +55,8 @@ class MMap:
         return False
 
 
-# CELLULAR AUTOMATA
-# I ended using the latter since looping was slow.
-# http://trystans.blogspot.com/2011/08/roguelike-tutorial-03-scrolling-through.html
-# https://roguebasin.com/index.php/Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
-# https://github.com/libtcod/python-tcod/blob/main/examples/cavegen.py
 class MCellularAutomata(MMap):
     """A natural cave-looking map."""
-
-    def __attrs_post_init__(self):
-        self.tiles: NDArray[np.uint8] = (
-            np.random.random((self.height, self.width)) > self._fill_percentage
-        )
-        self._center_x = int(len(self.tiles) / 2)
-        self._center_y = int(len(self.tiles[0]) / 2)
 
     def __middle_corridors(self):
         factor = 2
@@ -76,6 +64,9 @@ class MCellularAutomata(MMap):
         self.tiles[:, self._center_x - factor : self._center_x] = 1
 
     def make_caves(self):
+        self.tiles: NDArray[np.uint8] = (
+            np.random.random((self.height, self.width)) > self._fill_percentage
+        )
         self.__middle_corridors()
         for _ in range(5):
             self.tiles = self.convolve(self.tiles)
@@ -101,9 +92,11 @@ class MRandomWalk(MMap):
         total_tiles = 0
         steps = 400
 
-        self.tiles[self._center_y, self._center_x] = 1
-        drunk_y = copy(self._center_y)
-        drunk_x = copy(self._center_x)
+        center_x = int(len(self.tiles[0])/2)
+        center_y = int(len(self.tiles)/2)
+        self.tiles[center_y,center_x] = 1
+        drunk_y = copy(center_y)
+        drunk_x = copy(center_x)
         while total_tiles < goal:
             total_tiles = np.count_nonzero(self.tiles)
 
@@ -120,8 +113,8 @@ class MRandomWalk(MMap):
                         drunk_y -= 1
 
                 if self.out_of_bounds(drunk_x, drunk_y):
-                    drunk_x = self._center_x
-                    drunk_y = self._center_y
+                    drunk_x = center_x
+                    drunk_y = center_y
                 self.tiles[drunk_y, drunk_x] = 1
 
         self.add_borders()

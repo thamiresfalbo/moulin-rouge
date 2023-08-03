@@ -6,6 +6,7 @@ import numpy as np
 from numpy.typing import NDArray
 import constants
 from typing import Any
+import math
 
 
 # COMPONENTS
@@ -29,35 +30,41 @@ class CMap:
     tiles: NDArray[np.uint8]
 
 
+@component
+class CCamera:
+    width: int
+    height: int
+
+
 # PROCESSORS
 class PRender(esper.Processor):
-    """Renders anything. Please set priority higher than PMapRender."""
-
-    def process(self, console):
+    def process(self, console: Console):
         for ent, rend in self.world.get_component(CRender):
             console.print(rend.x, rend.y, rend.char, rend.fg, rend.bg)
 
 
 class PMapRender(esper.Processor):
-    """
-    Renders the map.
-    """
+    """Renders everything."""
 
-    def process(self, console):
+    def process(self, console: Console):
         for ent, cmap in self.world.get_component(CMap):
-            for y in range(len(cmap.tiles)):
-                for x in range(len(cmap.tiles[0])):
-                    if cmap.tiles[y, x] == True:
-                        # console.print(
-                        #     x, y, chr(0x20), constants.PURPLE, constants.BLACK
-                        # )
-                        pass
-                    else:
-                        console.print(
-                            x, y, chr(0x2588), constants.PURPLE, constants.BLACK
-                        )
+                for y in range(console.height):
+                    for x in range(console.width):
+                        if cmap.tiles[y, x] == False:
+                            console.print(
+                                x,
+                                y,
+                                chr(0x2592),
+                                constants.PURPLE,
+                                constants.BLACK,
+                            )
 
     def is_walkable(self, x: int, y: int) -> bool:
+        pass
+
+
+class PCamera(esper.Processor):
+    def process(self, console):
         pass
 
 

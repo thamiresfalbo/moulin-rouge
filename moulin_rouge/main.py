@@ -7,7 +7,7 @@ from map_builder import MCellularAutomata
 
 # TODO Add sdl window for layers.
 def main() -> None:
-    tileset = "assets/tileset.png"
+    tileset = "./assets/simple_mood16x16.png"
     TILESET = tcod.tileset.load_tilesheet(
         tileset,
         16,
@@ -16,24 +16,24 @@ def main() -> None:
     )
     root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT)
 
-    my_map = MCellularAutomata(constants.WIDTH, constants.HEIGHT).make_caves().build()
+    my_map = MCellularAutomata(constants.WIDTH,constants.HEIGHT).make_caves().build()
 
     # ECS
     world = esper.World()
 
     # Entities
-    player = world.create_entity()
-    entity_map = world.create_entity()
+    e_player = world.create_entity()
+    e_map = world.create_entity(director.CMap(my_map))
 
     # Processors
+    world.add_processor(director.PMapRender(),priority=1)
     world.add_processor(director.PRender())
-    world.add_processor(director.PMapRender(), priority=1)
     world.add_processor(director.PMovement())
+    world.add_processor(director.PCamera())
 
     # Components
-    world.add_component(entity_map, director.CMap(my_map))
     world.add_component(
-        player,
+        e_player,
         director.CRender(
             constants.CENTER[0],
             constants.CENTER[1],
@@ -43,13 +43,17 @@ def main() -> None:
         ),
     )
     world.add_component(
-        player,
+        e_player,
         director.CMovement(constants.CENTER[0], constants.CENTER[1]),
     )
 
+    world.add_component(
+        e_player, director.CCamera(root_console.width, root_console.height)
+    )
+
     with tcod.context.new(
-        columns=constants.WIDTH,
-        rows=constants.HEIGHT,
+        columns=root_console.width,
+        rows=root_console.height,
         tileset=TILESET,
         title="Moulin Rouge",
         vsync=True,
