@@ -7,7 +7,7 @@ from map_builder import MCellularAutomata
 
 def main() -> None:
     tileset = tcod.tileset.load_tilesheet(
-        "./assets/tileset.png",
+        "./assets/simple_mood16x16.png",
         16,
         16,
         tcod.tileset.CHARMAP_CP437,
@@ -23,11 +23,6 @@ def main() -> None:
     e_player = world.create_entity()
     e_map = world.create_entity(director.CMap(my_map))
 
-    # Processors
-    world.add_processor(director.PMapRender(), priority=1)
-    world.add_processor(director.PMovement())
-    world.add_processor(director.PCamera())
-
     # Components
     world.add_component(
         e_player,
@@ -40,13 +35,12 @@ def main() -> None:
         ),
     )
     world.add_component(
-        e_player,
-        director.CMovement(constants.CENTER[0], constants.CENTER[1]),
+        e_player, director.CMovement(constants.CENTER[0], constants.CENTER[1])
     )
 
-    world.add_component(
-        e_player, director.CCamera(root_console.width, root_console.height)
-    )
+    # Processors
+    world.add_processor(director.PMapRender(), priority=1)
+    world.add_processor(director.PMovement())
 
     with tcod.context.new(
         columns=root_console.width,

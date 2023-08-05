@@ -1,6 +1,6 @@
 # Default sizes for console
-WIDTH = 80
-HEIGHT = 50
+WIDTH = 30
+HEIGHT = 30
 CENTER = (int(WIDTH / 2), int(HEIGHT / 2))
 
 # Palette by Dawnbringer:
