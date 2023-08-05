@@ -1,22 +1,20 @@
 import tcod
+import esper
 import director
 import constants
-import esper
 from map_builder import MCellularAutomata
-import director
 
-# TODO Add sdl window for layers.
+
 def main() -> None:
-    tileset = "./assets/simple_mood16x16.png"
-    TILESET = tcod.tileset.load_tilesheet(
-        tileset,
+    tileset = tcod.tileset.load_tilesheet(
+        "./assets/tileset.png",
         16,
         16,
         tcod.tileset.CHARMAP_CP437,
     )
-    root_console = tcod.console.Console(constants.WIDTH,constants.HEIGHT)
+    root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT)
 
-    my_map = MCellularAutomata(100,100).make_caves().build()
+    my_map = MCellularAutomata(100, 100).make_caves().build()
 
     # ECS
     world = esper.World()
@@ -26,18 +24,16 @@ def main() -> None:
     e_map = world.create_entity(director.CMap(my_map))
 
     # Processors
-    world.add_processor(director.PMapRender(),priority=1)
+    world.add_processor(director.PMapRender(), priority=1)
     world.add_processor(director.PMovement())
     world.add_processor(director.PCamera())
 
     # Components
-    center_x = len(my_map)//2
-    center_y = len(my_map[0])//2
     world.add_component(
         e_player,
         director.CRender(
-            center_x,
-            center_y,
+            len(my_map[0]) // 2,
+            len(my_map) // 2,
             "@",
             constants.YELLOW,
             constants.BLACK,
@@ -55,7 +51,7 @@ def main() -> None:
     with tcod.context.new(
         columns=root_console.width,
         rows=root_console.height,
-        tileset=TILESET,
+        tileset=tileset,
         title="Moulin Rouge",
         vsync=True,
     ) as context:

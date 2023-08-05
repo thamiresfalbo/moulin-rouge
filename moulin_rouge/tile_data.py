@@ -13,4 +13,5 @@ class Tile:
 ROCK = Tile(" ", walkable=False, transparent=False, fg=constants.WHITE)
 FLOOR = Tile(".", walkable=True, transparent=True, fg=constants.WHITE)
 WALL = Tile("#", walkable=False, transparent=False, fg=constants.WHITE)
-STAIRS = Tile("<", walkable=True, transparent=True, fg=constants.YELLOW)
+STAIRS_UP = Tile("<", walkable=True, transparent=True, fg=constants.YELLOW)
+STAIRS_DOWN = Tile(">", walkable=True, transparent=True, fg=constants.YELLOW)

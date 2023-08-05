@@ -7,6 +7,7 @@ import numpy as np
 from numpy.typing import NDArray
 import math
 
+
 # COMPONENTS
 @component
 class CRender:
@@ -38,44 +39,46 @@ class CCamera:
 class PMapRender(esper.Processor):
     def process(self, console: Console):
         for ent, cmap in self.world.get_component(CMap):
-                for ent, rend in self.world.get_component(CRender):
-                    current = self.check_pos(rend,console,cmap)
-                    for y in range(console.height):
-                        for x in range(console.width):
-                            if cmap.tiles[y + current[1], x + current[0]] == False:
-                                console.print(
-                                    x,
-                                    y,
-                                    chr(0x2592),
-                                    constants.PURPLE,
-                                    constants.BLACK,
-                                )
-                            else:
-                                console.print(
-                                    x,
-                                    y,
-                                    chr(0xB7),
-                                    constants.PURPLE,
-                                    constants.BLACK,
-                                )
+            for ent, rend in self.world.get_component(CRender):
+                current = self.check_pos(rend, console, cmap)
+                for y in range(console.height):
+                    for x in range(console.width):
+                        if cmap.tiles[y + current[1], x + current[0]] == False:
+                            console.print(
+                                x,
+                                y,
+                                chr(0x2592),
+                                constants.PURPLE,
+                                constants.BLACK,
+                            )
+                        else:
+                            console.print(
+                                x,
+                                y,
+                                chr(0xB7),
+                                constants.PURPLE,
+                                constants.BLACK,
+                            )
         for ent, rend in self.world.get_component(CRender):
-            console.print(rend.x - current[0], rend.y - current[1], rend.char, rend.fg, rend.bg)
+            console.print(
+                rend.x - current[0], rend.y - current[1], rend.char, rend.fg, rend.bg
+            )
 
-    def check_pos(self,rend: CRender, console: Console, cmap: CMap) -> tuple:
-        half_x = int(console.width/2)
-        half_y = int(console.height/2)
+    def check_pos(self, rend: CRender, console: Console, cmap: CMap) -> tuple:
+        half_x = int(console.width / 2)
+        half_y = int(console.height / 2)
         curr_x = rend.x - half_x
         curr_y = rend.y - half_y
 
         if rend.x < half_x:
             curr_x = 0
-        elif rend.x >= len(cmap.tiles[0]) - half_x:
-            curr_x = len(cmap.tiles[0]) - console.height
+        elif rend.x > len(cmap.tiles[0]) - half_x:
+            curr_x = len(cmap.tiles[0]) - console.width
 
         if rend.y < half_y:
             curr_y = 0
-        elif rend.y >= len(cmap.tiles) - half_y:
-            curr_y = len(cmap.tiles) - console.width
+        elif rend.y > len(cmap.tiles) - half_y:
+            curr_y = len(cmap.tiles) - console.height
 
         return (curr_x, curr_y)
 
@@ -104,5 +107,5 @@ class PMovement(esper.Processor):
             rend.x = mov.x
             rend.y = mov.y
 
-    def is_walkable(x:int, y:int) -> bool:
+    def is_walkable(x: int, y: int) -> bool:
         pass
