@@ -3,7 +3,7 @@ import director
 import constants
 import esper
 from map_builder import MCellularAutomata
-
+import director
 
 # TODO Add sdl window for layers.
 def main() -> None:
@@ -14,9 +14,9 @@ def main() -> None:
         16,
         tcod.tileset.CHARMAP_CP437,
     )
-    root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT)
+    root_console = tcod.console.Console(constants.WIDTH,constants.HEIGHT)
 
-    my_map = MCellularAutomata(constants.WIDTH,constants.HEIGHT).make_caves().build()
+    my_map = MCellularAutomata(50,50).make_caves().build()
 
     # ECS
     world = esper.World()
@@ -32,11 +32,13 @@ def main() -> None:
     world.add_processor(director.PCamera())
 
     # Components
+    center_x = len(my_map)//2
+    center_y = len(my_map[0])//2
     world.add_component(
         e_player,
         director.CRender(
-            constants.CENTER[0],
-            constants.CENTER[1],
+            center_x,
+            center_y,
             "@",
             constants.YELLOW,
             constants.BLACK,

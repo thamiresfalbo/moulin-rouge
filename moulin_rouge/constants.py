@@ -1,5 +1,5 @@
 # Default sizes for console
-WIDTH = 80
+WIDTH = 30
 HEIGHT = 30
 CENTER = (int(WIDTH / 2), int(HEIGHT / 2))
 
