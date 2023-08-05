@@ -16,7 +16,7 @@ def main() -> None:
     )
     root_console = tcod.console.Console(constants.WIDTH,constants.HEIGHT)
 
-    my_map = MCellularAutomata(50,50).make_caves().build()
+    my_map = MCellularAutomata(100,100).make_caves().build()
 
     # ECS
     world = esper.World()
@@ -27,7 +27,6 @@ def main() -> None:
 
     # Processors
     world.add_processor(director.PMapRender(),priority=1)
-    world.add_processor(director.PRender())
     world.add_processor(director.PMovement())
     world.add_processor(director.PCamera())
 

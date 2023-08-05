@@ -5,6 +5,7 @@ import constants
 from attrs import define as component
 import numpy as np
 from numpy.typing import NDArray
+import math
 
 # COMPONENTS
 @component
@@ -34,52 +35,56 @@ class CCamera:
 
 
 # PROCESSORS
-class PRender(esper.Processor):
-    def process(self, console: Console):
-        for ent, rend in self.world.get_component(CRender):
-            console.print(rend.x, rend.y, rend.char, rend.fg, rend.bg)
-
-
 class PMapRender(esper.Processor):
     def process(self, console: Console):
         for ent, cmap in self.world.get_component(CMap):
                 for ent, rend in self.world.get_component(CRender):
+                    current = self.check_pos(rend,console,cmap)
                     for y in range(console.height):
                         for x in range(console.width):
-                            cur_x = x - int(console.width/2)
-                            cur_y = y - int(console.height/2)
-                            if cmap.tiles[y + cur_y,x + cur_x] == False:
+                            if cmap.tiles[y + current[1], x + current[0]] == False:
                                 console.print(
                                     x,
                                     y,
-                                    '#',
-                                    constants.WHITE,
+                                    chr(0x2592),
+                                    constants.PURPLE,
                                     constants.BLACK,
                                 )
                             else:
                                 console.print(
                                     x,
                                     y,
-                                    '.',
-                                    constants.WHITE,
+                                    chr(0xB7),
+                                    constants.PURPLE,
                                     constants.BLACK,
                                 )
+        for ent, rend in self.world.get_component(CRender):
+            console.print(rend.x - current[0], rend.y - current[1], rend.char, rend.fg, rend.bg)
 
-    def check_pos(self, x:int, y:int, console: Console) -> list:
-        pass
+    def check_pos(self,rend: CRender, console: Console, cmap: CMap) -> tuple:
+        half_x = int(console.width/2)
+        half_y = int(console.height/2)
+        curr_x = rend.x - half_x
+        curr_y = rend.y - half_y
 
+        if rend.x < half_x:
+            curr_x = 0
+        elif rend.x >= len(cmap.tiles[0]) - half_x:
+            curr_x = len(cmap.tiles[0]) - console.height
 
+        if rend.y < half_y:
+            curr_y = 0
+        elif rend.y >= len(cmap.tiles) - half_y:
+            curr_y = len(cmap.tiles) - console.width
 
-    def is_walkable(self, x: int, y: int) -> bool:
-        pass
+        return (curr_x, curr_y)
 
 
 class PCamera(esper.Processor):
     def process(self, console):
         pass
 
-# TODO Make player not move if the destination tile is not walkable.
-# TODO Finish implementing the scrolling map
+
 class PMovement(esper.Processor):
     def process(self, console):
         for ent, (rend, mov) in self.world.get_components(CRender, CMovement):
@@ -98,5 +103,6 @@ class PMovement(esper.Processor):
 
             rend.x = mov.x
             rend.y = mov.y
-            # if not self.world.get_processor(PMapRender).is_walkable(mov.x,mov.y):
-            #     return
+
+    def is_walkable(x:int, y:int) -> bool:
+        pass
