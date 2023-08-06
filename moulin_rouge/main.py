@@ -4,9 +4,11 @@ import director
 import constants
 from map_builder import MCellularAutomata
 
+# import pygame
 
-# TODO implement graphical window
-# TODO find a graphical tileset?
+
+# TODO Implement graphical window
+# TODO Find a graphical tileset?
 def main() -> None:
     tileset = tcod.tileset.load_tilesheet(
         "./assets/tileset.png",
@@ -17,7 +19,7 @@ def main() -> None:
 
     root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT)
 
-    my_map = MCellularAutomata(100, 100).make_caves().build()
+    my_map = MCellularAutomata(constants.WIDTH, constants.HEIGHT).make_caves().build()
 
     # ECS
     world = esper.World()

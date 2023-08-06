@@ -40,7 +40,7 @@ class PMapRender(esper.Processor):
                         console.print(
                             x,
                             y,
-                            chr(0x2592),
+                            "#",
                             constants.PURPLE,
                             constants.BLACK,
                         )
@@ -48,7 +48,7 @@ class PMapRender(esper.Processor):
                         console.print(
                             x,
                             y,
-                            chr(0xB7),
+                            ".",
                             constants.PURPLE,
                             constants.BLACK,
                         )
