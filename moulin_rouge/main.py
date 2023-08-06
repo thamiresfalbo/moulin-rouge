@@ -5,13 +5,16 @@ import constants
 from map_builder import MCellularAutomata
 
 
+# TODO implement graphical window
+# TODO find a graphical tileset?
 def main() -> None:
     tileset = tcod.tileset.load_tilesheet(
-        "./assets/simple_mood16x16.png",
+        "./assets/tileset.png",
         16,
         16,
         tcod.tileset.CHARMAP_CP437,
     )
+
     root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT)
 
     my_map = MCellularAutomata(100, 100).make_caves().build()

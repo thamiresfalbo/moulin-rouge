@@ -3,7 +3,9 @@
 ## Setup
 
 ```shell
-virtualenv .venv && source .venv/bin/Activate
-pip install -r requirements.txt
-cd moulin_rouge && python main.py
+virtualenv .venv
+source .venv/bin/Activate
+poetry install
+cd moulin_rouge
+python main.py
 ```

@@ -52,6 +52,7 @@ class PMapRender(esper.Processor):
                             constants.PURPLE,
                             constants.BLACK,
                         )
+
         for ent, rend in self.world.get_component(CRender):
             console.print(
                 rend.x - camera[0], rend.y - camera[1], rend.char, rend.fg, rend.bg

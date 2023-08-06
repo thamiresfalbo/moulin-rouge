@@ -3,13 +3,13 @@ from numpy.typing import NDArray
 import scipy.signal
 from copy import copy
 from attrs import define, field
+import tcod.bsp
+import tcod.los
 
 
 @define
 class MMap:
-    """
-    Main template class for maps.
-    """
+    """Main template class for maps."""
 
     width: int
     height: int
@@ -74,6 +74,7 @@ class MCellularAutomata(MMap):
 
         return self
 
+    # TODO Replace scipy implementation for MCellularAutomata
     def convolve(self, tiles: NDArray[np.uint8]):
         neighbors: NDArray[np.uint8] = scipy.signal.convolve2d(
             tiles == 0, [[1, 1, 1], [1, 1, 1], [1, 1, 1]], "same"
@@ -92,9 +93,9 @@ class MRandomWalk(MMap):
         total_tiles = 0
         steps = 400
 
-        center_x = int(len(self.tiles[0])/2)
-        center_y = int(len(self.tiles)/2)
-        self.tiles[center_y,center_x] = 1
+        center_x = int(len(self.tiles[0]) / 2)
+        center_y = int(len(self.tiles) / 2)
+        self.tiles[center_y, center_x] = 1
         drunk_y = copy(center_y)
         drunk_x = copy(center_x)
         while total_tiles < goal:
@@ -118,4 +119,9 @@ class MRandomWalk(MMap):
                 self.tiles[drunk_y, drunk_x] = 1
 
         self.add_borders()
+        return self
+
+
+class MRogue(MMap):
+    def make_caves(self):
         return self
