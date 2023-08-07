@@ -1,6 +1,5 @@
 import numpy as np
 from numpy.typing import NDArray
-import scipy.signal
 from copy import copy
 from attrs import define, field
 import tcod.bsp
@@ -17,9 +16,9 @@ class MMap:
     width: int
     height: int
     tiles: NDArray[Any] = field(init=False)
-    _fill_percentage: float = field(init=False, default=0.45)
-    _center_x: int = field(init=False)
-    _center_y: int = field(init=False)
+    fill_percentage: float = field(init=False, default=0.45)
+    center_x: int = field(init=False)
+    center_y: int = field(init=False)
 
     def __attrs_post_init__(self):
         self.tiles = np.full(
@@ -27,8 +26,8 @@ class MMap:
             fill_value=tile_data.WALL,
             order="F",
         )
-        self._center_x = int(len(self.tiles) / 2)
-        self._center_y = int(len(self.tiles[0]) / 2)
+        self.center_x = int(len(self.tiles) / 2)
+        self.center_y = int(len(self.tiles[0]) / 2)
 
     def add_borders(self):
         self.tiles[[0, -1], :] = tile_data.WALL
@@ -68,16 +67,16 @@ class MCellularAutomata(MMap):
 
     def middle_corridors(self):
         factor = 2
-        self.tiles[self._center_x - factor : self._center_x, :] = tile_data.FLOOR
-        self.tiles[:, self._center_y - factor : self._center_y] = tile_data.FLOOR
+        self.tiles[self.center_x - factor : self.center_x, :] = tile_data.FLOOR
+        self.tiles[:, self.center_y - factor : self.center_y] = tile_data.FLOOR
 
     def randomize_tiles(self):
-        for i in range(self.width):
-            for j in range(self.height):
-                if random.random() > self._fill_percentage:
-                    self.tiles[i][j] == tile_data.FLOOR
-                else:
-                    self.tiles[i][j] == tile_data.WALL
+        rng = np.random.default_rng()
+        self.tiles = rng.choice(
+            a=[tile_data.WALL, tile_data.FLOOR],
+            size=(self.width, self.height),
+            p=[self.fill_percentage, 1.0 - self.fill_percentage],
+        )
 
     def make_caves(self):
         self.randomize_tiles()
@@ -89,8 +88,26 @@ class MCellularAutomata(MMap):
 
     # TODO Replace scipy implementation for MCellularAutomata
     def convolve(self, tiles):
-        tiles2 = []
+        tiles2 = np.copy(tiles)
+        for x in range(1, self.width - 1):
+            for y in range(1, self.height - 1):
+                adjacent = self.adjacent_walls(tiles, x, y)
+                if adjacent >= 5:
+                    tiles2[x, y] = tile_data.WALL
+                elif adjacent <= 2:
+                    tiles2[x, y] = tile_data.FLOOR
+                else:
+                    tiles2[x, y] = tile_data.FLOOR
+
         return tiles2
+
+    def adjacent_walls(self, tiles: NDArray[np.bool_], x: int, y: int) -> int:
+        adjacent = 0
+        for i in range(x - 1, x + 2):
+            for j in range(y - 1, y + 2):
+                if tiles[i, j] == tile_data.WALL and not (j == 0 and i == 0):
+                    adjacent += 1
+        return adjacent
 
 
 # RANDOM WALK
@@ -98,7 +115,7 @@ class MRandomWalk(MMap):
     """A map made by umber hulks."""
 
     def make_caves(self):
-        goal = int(self.tiles.size * self._fill_percentage)
+        goal = int(self.tiles.size * self.fill_percentage)
         total_tiles = 0
         steps = 400
 

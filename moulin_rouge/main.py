@@ -2,11 +2,12 @@ import tcod
 import esper
 import director
 import constants
-from map_builder import MRandomWalk
+from map_builder import MCellularAutomata
 
 # import pygame
 
 
+# TODO Make it data-driven
 # TODO Implement graphical window
 # TODO Find a graphical tileset?
 def main() -> None:
@@ -18,7 +19,7 @@ def main() -> None:
     )
 
     root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT, "F")
-    my_map = MRandomWalk(100, 100).make_caves().build()
+    my_map = MCellularAutomata(constants.WIDTH, constants.HEIGHT).make_caves().build()
 
     world = esper.World()
 

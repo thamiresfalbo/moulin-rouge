@@ -18,11 +18,11 @@ def new_tile(
 WALL = new_tile(
     walkable=False,
     transparent=True,
-    dark=(ord("▒"), constants.PURPLE, constants.BLACK),
+    dark=(0x2592, constants.PURPLE, constants.BLACK),
 )
 
 FLOOR = new_tile(
     walkable=True,
     transparent=True,
-    dark=(ord(" "), constants.WHITE, constants.BLACK),
+    dark=(0x20, constants.PURPLE, constants.BLACK),
 )

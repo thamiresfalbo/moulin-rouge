@@ -36,12 +36,10 @@ class PMapRender(esper.Processor):
             camera = self.camera_pos(console, cmap)
             for x in range(console.width):
                 for y in range(console.height):
-                    console.rgb[x, y] = cmap.tiles[x + camera[0], y + camera[1]]["dark"]
+                    console.rgb[x, y] = cmap.tiles[x, y]["dark"]
 
         for ent, rend in self.world.get_component(CRender):
-            console.print(
-                rend.x - camera[0], rend.y - camera[1], rend.char, rend.fg, rend.bg
-            )
+            console.print(rend.x, rend.y, rend.char, rend.fg, rend.bg)
 
     def camera_pos(self, console: Console, cmap: CMap) -> tuple:
         for ent, rend in self.world.get_component(CRender):
@@ -81,6 +79,7 @@ class PMovement(esper.Processor):
                     case tcod.event.KeyDown(sym=tcod.event.KeySym.DOWN):
                         mov.y += 1
 
+            # Checks if player can walk in the tile.
             for ent, cmap in self.world.get_component(CMap):
                 if not cmap.tiles[mov.x, mov.y]["walkable"]:
                     return
