@@ -81,8 +81,9 @@ class PMovement(esper.Processor):
                     case tcod.event.KeyDown(sym=tcod.event.KeySym.DOWN):
                         mov.y += 1
 
-            rend.x = mov.x
-            rend.y = mov.y
-
-    def is_walkable(x: int, y: int) -> bool:
-        pass
+            for ent, cmap in self.world.get_component(CMap):
+                if not cmap.tiles[mov.x, mov.y]["walkable"]:
+                    return
+                else:
+                    rend.x = mov.x
+                    rend.y = mov.y
