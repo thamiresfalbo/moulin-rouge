@@ -1,11 +1,11 @@
 import esper
 from tcod.console import Console
 import tcod.event
-import constants
-from attrs import define as component
-import numpy as np
-from numpy.typing import NDArray
 import math
+from attrs import define as component
+from attrs import field
+from numpy.typing import NDArray
+from typing import Any
 
 
 # COMPONENTS
@@ -20,13 +20,13 @@ class CRender:
 
 @component
 class CMovement:
-    x: int = 0
-    y: int = 0
+    x: int = field(init=False)
+    y: int = field(init=False)
 
 
 @component
 class CMap:
-    tiles: NDArray[np.uint8]
+    tiles: NDArray[Any]
 
 
 # PROCESSORS
@@ -34,24 +34,9 @@ class PMapRender(esper.Processor):
     def process(self, console: Console):
         for ent, cmap in self.world.get_component(CMap):
             camera = self.camera_pos(console, cmap)
-            for y in range(console.height):
-                for x in range(console.width):
-                    if cmap.tiles[y + camera[1], x + camera[0]] == False:
-                        console.print(
-                            x,
-                            y,
-                            "#",
-                            constants.PURPLE,
-                            constants.BLACK,
-                        )
-                    else:
-                        console.print(
-                            x,
-                            y,
-                            ".",
-                            constants.PURPLE,
-                            constants.BLACK,
-                        )
+            for x in range(console.width):
+                for y in range(console.height):
+                    console.rgb[x, y] = cmap.tiles[x + camera[0], y + camera[1]]["dark"]
 
         for ent, rend in self.world.get_component(CRender):
             console.print(
@@ -81,6 +66,8 @@ class PMapRender(esper.Processor):
 class PMovement(esper.Processor):
     def process(self, console):
         for ent, (rend, mov) in self.world.get_components(CRender, CMovement):
+            mov.x = rend.x
+            mov.y = rend.y
             for event in tcod.event.wait():
                 match event:
                     case tcod.event.Quit():

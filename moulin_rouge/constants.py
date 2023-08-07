@@ -3,6 +3,7 @@ WIDTH = 80
 HEIGHT = 50
 CENTER = (int(WIDTH / 2), int(HEIGHT / 2))
 
+
 # Palette by Dawnbringer:
 # https://pixeljoint.com/forum/forum_posts.asp?TID=26050
 WHITE = (220, 245, 255)
