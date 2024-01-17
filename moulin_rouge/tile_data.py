@@ -1,7 +1,6 @@
 import constants
 import numpy as np
 
-
 graphic_dt = np.dtype([("ch", np.int32), ("fg", "3B"), ("bg", "3B")])
 
 tile_dt = np.dtype([("walkable", bool), ("transparent", bool), ("dark", graphic_dt)])
@@ -24,5 +23,5 @@ WALL = new_tile(
 FLOOR = new_tile(
     walkable=True,
     transparent=True,
-    dark=(0x20, constants.PURPLE, constants.BLACK),
+    dark=(0xB7, constants.PURPLE, constants.BLACK),
 )

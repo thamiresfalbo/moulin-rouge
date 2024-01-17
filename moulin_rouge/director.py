@@ -6,6 +6,7 @@ from attrs import define as component
 from attrs import field
 from numpy.typing import NDArray
 from typing import Any
+import constants
 
 
 # COMPONENTS
@@ -29,19 +30,32 @@ class CMap:
     tiles: NDArray[Any]
 
 
+@component
+class CLog:
+    x: int = field(init=False, default=0)
+    y: int = field(init=False, default=constants.HEIGHT - 10)
+    width: int = field(init=False, default=constants.WIDTH)
+    height: int = field(init=False, default=10)
+
+
 # PROCESSORS
 class PMapRender(esper.Processor):
+    """ "Renders the map view."""
+
     def process(self, console: Console):
         for ent, cmap in self.world.get_component(CMap):
             camera = self.camera_pos(console, cmap)
             for x in range(console.width):
                 for y in range(console.height):
-                    console.rgb[x, y] = cmap.tiles[x, y]["dark"]
+                    console.rgb[x, y] = cmap.tiles[x + camera[0], y + camera[1]]["dark"]
 
         for ent, rend in self.world.get_component(CRender):
-            console.print(rend.x, rend.y, rend.char, rend.fg, rend.bg)
+            console.print(
+                rend.x - camera[0], rend.y - camera[1], rend.char, rend.fg, rend.bg
+            )
 
     def camera_pos(self, console: Console, cmap: CMap) -> tuple:
+        """ "Calculates camera position from the map coordinates."""
         for ent, rend in self.world.get_component(CRender):
             half_x = int(console.width / 2)
             half_y = int(console.height / 2)
@@ -61,7 +75,19 @@ class PMapRender(esper.Processor):
         return (camera_x, camera_y)
 
 
+class PLogRender(esper.Processor):
+    """Renders the log window."""
+
+    def process(self, console: Console):
+        for ent, clog in self.world.get_component(CLog):
+            console.draw_frame(
+                x=clog.x, y=clog.y, width=clog.width, height=clog.height, title="Log"
+            )
+
+
 class PMovement(esper.Processor):
+    """Processes player keys."""
+
     def process(self, console):
         for ent, (rend, mov) in self.world.get_components(CRender, CMovement):
             mov.x = rend.x

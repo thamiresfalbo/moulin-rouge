@@ -86,7 +86,6 @@ class MCellularAutomata(MMap):
             self.add_borders()
         return self
 
-    # TODO Replace scipy implementation for MCellularAutomata
     def convolve(self, tiles):
         tiles2 = np.copy(tiles)
         for x in range(1, self.width - 1):
