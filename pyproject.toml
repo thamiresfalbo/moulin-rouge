@@ -14,7 +14,6 @@ tcod = "^16.1.1"
 attrs = "^23.1.0"
 pygame = "^2.5.0"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -6,7 +6,6 @@ from map_builder import MCellularAutomata
 
 # import pygame
 
-
 # TODO Implement graphical window
 # TODO Find a graphical tileset?
 def main() -> None:

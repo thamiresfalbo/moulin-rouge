@@ -77,7 +77,7 @@ class PMapRender(esper.Processor):
 
         return (camera_x, camera_y)
 
-
+#TODO BUG: Player is walking in non-walkable tiles
 class PMovement(esper.Processor):
     def process(self, console):
         for ent, (rend, mov) in self.world.get_components(CRender, CMovement):
