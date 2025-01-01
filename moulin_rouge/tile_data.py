@@ -1,17 +1,27 @@
-import attrs
 import constants
+import numpy as np
+
+graphic_dt = np.dtype([("ch", np.int32), ("fg", "3B"), ("bg", "3B")])
+
+tile_dt = np.dtype([("walkable", bool), ("transparent", bool), ("dark", graphic_dt)])
 
 
-@attrs.define
-class Tile:
-    char: str
-    walkable: bool
-    transparent: bool
-    fg: tuple[int, int, int]
+def new_tile(
+    walkable: bool,
+    transparent: bool,
+    dark: tuple[int, tuple[int, int, int], tuple[int, int, int]],
+):
+    return np.array((walkable, transparent, dark), dtype=tile_dt)
 
 
-ROCK = Tile(" ", walkable=False, transparent=False, fg=constants.WHITE)
-FLOOR = Tile(".", walkable=True, transparent=True, fg=constants.WHITE)
-WALL = Tile("#", walkable=False, transparent=False, fg=constants.WHITE)
-STAIRS_UP = Tile("<", walkable=True, transparent=True, fg=constants.YELLOW)
-STAIRS_DOWN = Tile(">", walkable=True, transparent=True, fg=constants.YELLOW)
+WALL = new_tile(
+    walkable=False,
+    transparent=True,
+    dark=(0x2592, constants.PURPLE, constants.BLACK),
+)
+
+FLOOR = new_tile(
+    walkable=True,
+    transparent=True,
+    dark=(0xB7, constants.PURPLE, constants.BLACK),
+)

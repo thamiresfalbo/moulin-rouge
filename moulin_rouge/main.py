@@ -1,50 +1,21 @@
 import tcod
 import esper
-import director
 import constants
-from map_builder import MCellularAutomata
+from screens.start_screen import start_screen
 
-# import pygame
-
-# TODO Implement graphical window
-# TODO Find a graphical tileset?
+# TODO Make it data-driven
 def main() -> None:
     tileset = tcod.tileset.load_tilesheet(
-        "./assets/tileset.png",
+        "./assets/taffer9x9.png",
         16,
         16,
         tcod.tileset.CHARMAP_CP437,
     )
 
-    root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT)
+    root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT, "F")
 
-    my_map = MCellularAutomata(constants.WIDTH, constants.HEIGHT).make_caves().build()
-
-    # ECS
     world = esper.World()
-
-    # Entities
-    e_player = world.create_entity()
-    e_map = world.create_entity(director.CMap(my_map))
-
-    # Components
-    world.add_component(
-        e_player,
-        director.CRender(
-            len(my_map[0]) // 2,
-            len(my_map) // 2,
-            "@",
-            constants.YELLOW,
-            constants.BLACK,
-        ),
-    )
-    world.add_component(
-        e_player, director.CMovement(constants.CENTER[0], constants.CENTER[1])
-    )
-
-    # Processors
-    world.add_processor(director.PMapRender(), priority=1)
-    world.add_processor(director.PMovement())
+    start_screen(world)
 
     with tcod.context.new(
         columns=root_console.width,
@@ -54,9 +25,9 @@ def main() -> None:
         vsync=True,
     ) as context:
         while True:
-            context.present(root_console)
             root_console.clear()
             world.process(root_console)
+            context.present(root_console)
 
 
 if __name__ == "__main__":
