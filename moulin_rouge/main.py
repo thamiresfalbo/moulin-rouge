@@ -3,10 +3,11 @@ import esper
 import constants
 from screens.start_screen import start_screen
 
+
 # TODO Make it data-driven
 def main() -> None:
     tileset = tcod.tileset.load_tilesheet(
-        "./assets/taffer9x9.png",
+        "./assets/simple-mood-boxy16x16.png",
         16,
         16,
         tcod.tileset.CHARMAP_CP437,

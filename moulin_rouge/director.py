@@ -74,7 +74,6 @@ class PMapRender(esper.Processor):
 
         return (camera_x, camera_y)
 
-#TODO BUG: Player is walking in non-walkable tiles
 class PLogRender(esper.Processor):
     """Renders the log window."""
 

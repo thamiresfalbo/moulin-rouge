@@ -1,17 +1,19 @@
-[tool.poetry]
-name = "Moulin Rouge"
+[project]
+name = "moulin-rouge"
 version = "0.1.0"
 description = "The West Calls"
-authors = ["Thamires Falbo <111710331+thamiresfalbo@users.noreply.github.com>"]
+authors = [
+    { name = "Thamires Falbo", email = "111710331+thamiresfalbo@users.noreply.github.com" },
+]
+requires-python = ">=3.11,<3.13"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = ">=3.11,<3.13"
-numpy = "^1.25.2"
-esper = "^2.5"
-tcod = "^16.1.1"
-attrs = "^23.1.0"
+dependencies = [
+    "numpy>=1.25.2,<2",
+    "esper~=2.5",
+    "tcod>=16.1.1,<17",
+    "attrs>=23.1.0,<24",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
