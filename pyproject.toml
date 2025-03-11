@@ -1,7 +1,7 @@
 [project]
 name = "moulin-rouge"
-version = "0.1.0"
-description = "The West Calls"
+version = "0.1.1"
+description = "."
 authors = [
     { name = "Thamires Falbo", email = "111710331+thamiresfalbo@users.noreply.github.com" },
 ]
