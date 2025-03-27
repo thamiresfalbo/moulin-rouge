@@ -1,11 +1,10 @@
 import constants
-from map_builder import MRandomWalk
+from map_builder import MCellularAutomata
 import esper
 import director
 
-
 def start_screen(world: esper.World):
-    my_map = MRandomWalk(100, 100).make_caves().build()
+    my_map = MCellularAutomata(100, 100).make_caves().build()
     e_player = world.create_entity(
         director.CRender(
             len(my_map[0]) // 2,

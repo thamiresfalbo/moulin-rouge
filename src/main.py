@@ -31,5 +31,5 @@ def main() -> None:
             context.present(root_console)
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
