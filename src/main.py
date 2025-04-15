@@ -2,10 +2,21 @@ import tcod
 import esper
 import constants
 from screens.start_screen import start_screen
+from screens.main_menu import main_menu
+import libs.terminal as terminal
 
 
 # TODO Make it data-driven
+# TODO Add Graphics
 def main() -> None:
+    # terminal.open()
+    # terminal.printf(1, 1, "Hello, world!")
+    # terminal.refresh()
+
+    # while terminal.read() != terminal.TK_CLOSE:
+    #     pass
+
+    # terminal.close()
     tileset = tcod.tileset.load_tilesheet(
         "./assets/simple-mood-boxy16x16.png",
         16,
@@ -16,7 +27,7 @@ def main() -> None:
     root_console = tcod.console.Console(constants.WIDTH, constants.HEIGHT, "F")
 
     world = esper.World()
-    start_screen(world)
+    main_menu(world)
 
     with tcod.context.new(
         columns=root_console.width,
@@ -31,5 +42,5 @@ def main() -> None:
             context.present(root_console)
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
