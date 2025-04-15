@@ -3,6 +3,10 @@ WIDTH = 80
 HEIGHT = 50
 CENTER = (int(WIDTH / 2), int(HEIGHT / 2))
 
+# Views
+MAP_VIEW_WIDTH = 80
+MAP_VIEW_HEIGHT = HEIGHT - 10
+
 # Palette by Dawnbringer:
 # https://pixeljoint.com/forum/forum_posts.asp?TID=26050
 WHITE = (220, 245, 255)
